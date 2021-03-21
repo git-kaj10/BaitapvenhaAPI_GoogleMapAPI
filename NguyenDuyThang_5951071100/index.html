@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bài tập về nhà GOOGLE MAP API</title>
+    <style>
+        .point{
+            font-size: 50px;
+            color: red;
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <script>
+        function initMap() {
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 8,
+            });
+
+            directionsRenderer.setMap(map);
+
+            const myLocation = { lat: 10.837667261777575, lng: 106.79138012863208 };
+            const UTC2 = { lat: 10.845837286855385, lng: 106.79460829741677 };
+
+
+            directionsService.route(
+                {
+                    origin: myLocation,
+                    destination: UTC2,
+                    travelMode: google.maps.TravelMode.WALKING,
+                },
+                (response, status) => {
+                    if(status == 'OK')
+                        directionsRenderer.setDirections(response);
+                    else
+                        window.alert("Directions request failed due to " + status);
+                }
+            );
+
+            //custome marker for location: myLocation, UTC2
+            const myLocationMarker = new google.maps.Marker({
+                title: 'my location',
+                position : myLocation,
+                map: map, 
+                icon: "myAvatar.jpg",
+                
+            });
+
+            const utc2Marker = new google.maps.Marker({
+                title: 'utc2',
+                position : UTC2,
+                map: map,
+                icon: "logoUTC2.jpg",
+            });
+
+            // info windows for markers
+            const infoUTC2 = "Địa chỉ: 450-451 Lê Văn Việt, Phường Tăng Nhơn Phú A, Tp. Thủ Đức (Quận 9 cũ), TP. Hồ Chí Minh</br>Điện thoại: (028).3896.6798 - (028).7300.1155</br>Email: banbientap@utc2.edu.vn</br>Fax: (028).3896.4736 - Website: http://utc2.edu.vn";
+            const infoMyLocation = "Họ Tên: Nguyễn Duy Thắng</br>Tuổi: 20</br> MSSV: 5951071100</br>Ngày sinh: 10/8/2000</br>Email: 5951071100@st.utc2.edu.vn";
+
+            const utc2MarkerInfoWindow = new google.maps.InfoWindow({
+                content : infoUTC2
+            });
+
+            const myLocationMarkerInfoWindow = new google.maps.InfoWindow({
+                content : infoMyLocation
+            });
+
+            myLocationMarker.addListener("click", ()=>{
+                myLocationMarkerInfoWindow.open(map, myLocationMarker);
+            });
+
+            utc2Marker.addListener("click", ()=>{
+                utc2MarkerInfoWindow.open(map, utc2Marker);
+            });
+
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Chỉ dẫn: <span class="point">Hẻm 31 Đường 160, Tăng Nhơn Phú A, Quận 9</span> tới <span class="point">UTC2</span> </h1>
+    <div id="map"></div>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
+        async></script>
+</body>
+
+</html>
